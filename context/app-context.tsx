@@ -28,7 +28,7 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
   }, [])
 
   useLayoutEffect(() => {
-    const token = localStorage.getItem('facebook_page_data')
+    const token = localStorage.getItem(`facebook_page_data`)
     if (token) {
       setConnected(true)
     }

@@ -7,9 +7,11 @@ import { FacebookAuthProvider, linkWithPopup, unlink } from 'firebase/auth'
 import { ClipLoader } from 'react-spinners'
 import Link from 'next/link'
 import React, { useContext, useState } from 'react'
+import toast from 'react-hot-toast'
 
 const ConnectFB = () => {
   const [loading, setLoading] = useState(false)
+
   const { connected, setConnected, setPageName, pageName } = useContext(
     RichPanelContextValues
   )!
@@ -25,7 +27,7 @@ const ConnectFB = () => {
         const page_data = data.accounts.data[0]
         setPageName(page_data.name)
         setConnected(true)
-        localStorage.setItem('facebook_page_data', JSON.stringify(page_data))
+        localStorage.setItem(`facebook_page_data`, JSON.stringify(page_data))
       })
   }
 
@@ -34,8 +36,8 @@ const ConnectFB = () => {
     unlink(firebase_auth.currentUser!, 'facebook.com')
       .then(() => {
         setConnected(false)
-        localStorage.removeItem('facebook_page_data')
-        localStorage.removeItem('facebook_user_access_token')
+        localStorage.removeItem(`facebook_page_data`)
+        localStorage.removeItem(`facebook_user_access_token`)
       })
       .catch((error: any) => {
         console.log('Error unlinking: ', error)
@@ -64,11 +66,12 @@ const ConnectFB = () => {
         const credential = FacebookAuthProvider.credentialFromResult(result)
         const accessToken = credential?.accessToken
         if (accessToken) {
-          localStorage.setItem('facebook_user_access_token', accessToken)
+          localStorage.setItem(`facebook_user_access_token`, accessToken)
           fetchPageData(accessToken)
         }
       })
       .catch((error) => {
+        toast.error(error.message)
         console.error('Facebook Authentication Error:', error.message)
       })
       .finally(() => {
@@ -81,7 +84,7 @@ const ConnectFB = () => {
       Integrated Page:{' '}
       <span className="font-bold text-content">
         {pageName ??
-          JSON.parse(localStorage.getItem('facebook_page_data') || '{}').name}
+          JSON.parse(localStorage.getItem(`facebook_page_data`) || '{}').name}
       </span>
     </p>
   )

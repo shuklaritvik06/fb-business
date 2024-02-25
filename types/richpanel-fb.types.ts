@@ -135,4 +135,19 @@ export interface ReturnData {
   updated_time: string
   conversation_id: string
   messages: Message[]
+  sender_email: string
+}
+
+export interface FBUser {
+  email: string
+  last_name: string
+  picture: string
+  first_name: string
+  name: string
+  sender_id: string
+}
+
+export interface ProfilePic {
+  profile_pic: string
+  id: string
 }

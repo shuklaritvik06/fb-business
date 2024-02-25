@@ -17,10 +17,10 @@ const SideBar = () => {
   }
 
   return (
-    <div className="hidden h-screen bg-primary lg:block lg:w-20">
+    <aside className="hidden h-screen bg-primary lg:block lg:w-20">
       <div className="flex h-full flex-col justify-between">
         <div className="mt-5 flex flex-col items-center">
-          <div>
+          <Link href="/">
             <Image
               src={'logo.svg'}
               width={0}
@@ -28,7 +28,7 @@ const SideBar = () => {
               alt="Logo"
               className="h-10 w-10"
             />
-          </div>
+          </Link>
           <div className="mt-6 flex w-full flex-col items-center">
             <Link href="/" className={getLinkClassName('/')}>
               <Inbox selected={pathname === '/'} />
@@ -43,7 +43,7 @@ const SideBar = () => {
         </div>
         <UserMenu />
       </div>
-    </div>
+    </aside>
   )
 }
 
