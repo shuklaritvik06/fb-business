@@ -35,7 +35,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  return NextResponse.redirect(new URL('/', request.url))
+  return NextResponse.next({
+    statusText: responseAPI.status.toString(),
+  })
 }
 
 export const config = {
