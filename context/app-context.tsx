@@ -30,7 +30,7 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
         setUser(authUser)
       } else {
         setUser(null)
-        destroyCookie(null, 'session')
+        destroyCookie({}, 'session')
       }
     })
 
