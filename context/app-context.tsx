@@ -29,6 +29,7 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
       if (authUser) {
         setUser(authUser)
       } else {
+        setUser(null)
         destroyCookie(null, 'session')
       }
     })
@@ -47,7 +48,7 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
     if (!cookies['session'] && window.location.pathname !== '/login') {
       window.location.href = '/login'
     }
-  }, [cookies])
+  }, [user])
 
   const contextValues: IRichPanelContext = {
     setConnected,
