@@ -22,7 +22,12 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebase_auth, (authUser) => {
-      setUser(authUser)
+      if (authUser) {
+        setUser(authUser)
+      } else {
+        sessionStorage.removeItem('session')
+        window.location.href = '/login'
+      }
     })
     return () => unsubscribe()
   }, [])
