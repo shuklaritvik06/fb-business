@@ -32,19 +32,3 @@ export async function POST(request: NextRequest, response: NextResponse) {
     return NextResponse.json({ isLogged: false, err: err }, { status: 401 })
   }
 }
-
-export async function GET(request: NextRequest) {
-  const session = request.cookies.get('session') || ''
-
-  if (!session) {
-    return NextResponse.json({ isLogged: false }, { status: 401 })
-  }
-
-  const decodedClaims = await auth().verifySessionCookie(session.value, true)
-
-  if (!decodedClaims) {
-    return NextResponse.json({ isLogged: false }, { status: 401 })
-  }
-
-  return NextResponse.json({ isLogged: true }, { status: 200 })
-}
