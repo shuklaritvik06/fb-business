@@ -18,20 +18,23 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  try {
-    const responseAPI = await fetch(apiUrl.href, {
-      headers: {
-        Cookie: `session=${session}`,
-      },
-    })
+  const responseAPI = await fetch(apiUrl.href, {
+    headers: {
+      Cookie: `session=${session}`,
+    },
+  })
 
-    if (responseAPI.status === 200) {
-      return NextResponse.next()
-    } else {
-      return NextResponse.redirect('/login')
-    }
-  } catch (error) {
-    console.error('Error fetching API:', error)
+  if (
+    excludedPaths.some((path) => request.nextUrl.pathname.includes(path)) &&
+    responseAPI.status === 200
+  ) {
+    return NextResponse.redirect('/')
+  }
+
+  if (responseAPI.status === 200) {
+    return NextResponse.next()
+  } else {
+    return NextResponse.redirect('/login')
   }
 }
 
