@@ -39,9 +39,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  return NextResponse.next({
-    statusText: responseAPI.status.toString(),
-  })
+  return NextResponse.next({})
 }
 
 export const config = {
