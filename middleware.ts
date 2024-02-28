@@ -33,8 +33,6 @@ export async function middleware(request: NextRequest) {
 
   if (responseAPI.status === 200) {
     return NextResponse.next()
-  } else {
-    return NextResponse.redirect(new URL('/login', request.url))
   }
 }
 
