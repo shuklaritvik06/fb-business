@@ -34,6 +34,8 @@ export async function middleware(request: NextRequest) {
   if (responseAPI.status === 200) {
     return NextResponse.next()
   }
+
+  return NextResponse.redirect(new URL('/', request.url))
 }
 
 export const config = {
