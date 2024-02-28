@@ -28,13 +28,13 @@ export async function middleware(request: NextRequest) {
     excludedPaths.some((path) => request.nextUrl.pathname.includes(path)) &&
     responseAPI.status === 200
   ) {
-    return NextResponse.redirect('/')
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   if (responseAPI.status === 200) {
     return NextResponse.next()
   } else {
-    return NextResponse.redirect('/login')
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 }
 
