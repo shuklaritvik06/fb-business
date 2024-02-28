@@ -27,6 +27,8 @@ export async function middleware(request: NextRequest) {
 
     if (responseAPI.status === 200) {
       return NextResponse.next()
+    } else {
+      return NextResponse.redirect('/login')
     }
   } catch (error) {
     console.error('Error fetching API:', error)
