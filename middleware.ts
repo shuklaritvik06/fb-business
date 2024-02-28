@@ -38,8 +38,6 @@ export async function middleware(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching API:', error)
   }
-
-  return NextResponse.next()
 }
 
 export const config = {
