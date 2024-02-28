@@ -18,6 +18,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  if (!session) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
   const responseAPI = await fetch(apiUrl.href, {
     headers: {
       Cookie: `session=${session}`,
