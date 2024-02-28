@@ -53,16 +53,14 @@ const Login = () => {
       })
 
       if (user) {
-        const response = await fetch('/api/login', {
+        fetch('/api/login', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${await user.getIdToken()}`,
           },
-        })
-
-        if (response.status === 200) {
+        }).then(() => {
           router.replace('/connect')
-        }
+        })
       }
 
       setEmail('')

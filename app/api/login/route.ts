@@ -21,7 +21,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
           value: sessionCookie,
           maxAge: expiresIn,
           httpOnly: true,
-          secure: true,
         }
 
         cookies().set(options)
