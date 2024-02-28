@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
-import { customInitApp } from '@/lib/firebase-admin'
-import { auth } from 'firebase-admin'
-
-customInitApp()
 
 export async function middleware(request: NextRequest) {
+  const index = request.url.lastIndexOf('/')
+  const url = request.url.slice(0, index)
+
+  const apiUrl = new URL('/api/login', url)
+
   const session = request.cookies.get('session')?.value
 
   const excludedPaths = ['login', 'register']
@@ -18,9 +19,16 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const decodedClaims = await auth().verifySessionCookie(session!, true)
+    const responseAPI = await fetch(apiUrl.href, {
+      headers: {
+        Cookie: `session=${session}`,
+      },
+    })
 
-    if (!decodedClaims) {
+    if (
+      responseAPI.status !== 200 &&
+      !excludedPaths.some((path) => request.nextUrl.pathname.includes(path))
+    ) {
       return NextResponse.redirect(new URL('/register', request.url))
     }
   } catch (error) {
@@ -31,6 +39,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  runtime: 'nodejs',
   matcher: ['/((?!api|_next/static|_next/image|favicon.png|connect).*)'],
 }
