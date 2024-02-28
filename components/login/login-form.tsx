@@ -10,6 +10,7 @@ import {
   setPersistence,
 } from 'firebase/auth'
 import { firebase_auth } from '@/lib/firebase-client'
+import toast from 'react-hot-toast'
 
 const Login = () => {
   const [email, setEmail] = useState<string | null>('')
@@ -52,16 +53,14 @@ const Login = () => {
       })
 
       if (user) {
-        const response = await fetch('/api/login', {
+        fetch('/api/login', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${await user.getIdToken()}`,
           },
+        }).then(() => {
+          router.replace('/connect')
         })
-
-        if (response.status === 200) {
-          router.push('/connect')
-        }
       }
 
       setEmail('')
@@ -69,6 +68,7 @@ const Login = () => {
       setError(null)
       setLoading(false)
     } catch (error: any) {
+      console.log(error)
       if (error.code) {
         const errorCode = error.code
         const errorMessages: { [key: string]: string } = {
@@ -81,6 +81,7 @@ const Login = () => {
           'auth/email-already-in-use':
             'Email is already in use. Please choose a different email.',
         }
+        toast.error(errorMessages[errorCode] || error.message)
         setError(errorMessages[errorCode] || error.message)
       } else {
         setError(error.message)

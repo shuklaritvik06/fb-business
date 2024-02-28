@@ -10,7 +10,11 @@
   },
   "scripts": {
     "build": "next build",
+<<<<<<< HEAD
     "dev": "HTTPS=true cross-env NODE_ENV=development next dev",
+=======
+    "dev": "cross-env NODE_ENV=development next dev",
+>>>>>>> dev
     "fix:prettier": "npx prettier --write . --config='./prettier.config.js'",
     "lint": "next lint",
     "start": "next start"

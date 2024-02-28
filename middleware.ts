@@ -2,31 +2,46 @@ import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  const base_url =
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000'
-      : 'https://richpanel-assignment-alpha.vercel.app/'
+  const index = request.url.lastIndexOf('/')
+  const url = request.url.slice(0, index)
 
-  const session = request.cookies.get('session')
+  const apiUrl = new URL('/api/login', url)
 
-  if (!session?.value) {
+  const session = request.cookies.get('session')?.value
+
+  const excludedPaths = ['login', 'register']
+
+  if (
+    !session &&
+    excludedPaths.some((path) => request.nextUrl.pathname.includes(path))
+  ) {
+    return NextResponse.next()
+  }
+
+  if (!session) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  const responseAPI = await fetch(base_url + '/api/login', {
-    credentials: 'include',
+  const responseAPI = await fetch(apiUrl.href, {
     headers: {
-      Cookie: `session=${session?.value}`,
+      Cookie: `session=${session}`,
     },
   })
 
-  if (responseAPI.status !== 200) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (
+    excludedPaths.some((path) => request.url.includes(path)) &&
+    responseAPI.status === 200
+  ) {
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
-  return NextResponse.next()
+  if (responseAPI.status === 200) {
+    return NextResponse.next()
+  }
+
+  return NextResponse.next({})
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|register).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.png).*)'],
 }
