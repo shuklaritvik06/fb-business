@@ -36,7 +36,7 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe()
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const token = localStorage.getItem('facebook_page_data')
     if (token) {
       setConnected(true)
