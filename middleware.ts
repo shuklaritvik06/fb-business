@@ -27,10 +27,7 @@ export async function middleware(request: NextRequest) {
       },
     })
 
-    if (
-      responseAPI.status !== 200 &&
-      !excludedPaths.some((path) => request.nextUrl.pathname.includes(path))
-    ) {
+    if (responseAPI.status !== 200) {
       return NextResponse.redirect(new URL('/register', request.url))
     }
   } catch (error) {
