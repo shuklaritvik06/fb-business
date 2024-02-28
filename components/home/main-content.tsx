@@ -309,7 +309,7 @@ const DashboardMain = () => {
                       </div>
                     </div>
                     <div className="h-screen bg-tertiary px-2">
-                      <div className="h-5/6 overflow-y-auto py-2">
+                      <div className="h-5/6 overflow-y-auto py-2" id="messages">
                         <MessagesList
                           messages={messages}
                           selectedUser={selectedUser}

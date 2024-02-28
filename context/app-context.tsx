@@ -1,8 +1,6 @@
 'use client'
 
-import { firebase_auth } from '@/lib/firebase-client'
-import { IRichPanelContext } from '@/types/richpanel-fb.types'
-import { User, onAuthStateChanged } from 'firebase/auth'
+import { onAuthStateChanged, User } from 'firebase/auth'
 import React, {
   ReactNode,
   createContext,
@@ -10,6 +8,10 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react'
+import { destroyCookie, parseCookies } from 'nookies'
+
+import { firebase_auth } from '@/lib/firebase-client'
+import { IRichPanelContext } from '@/types/richpanel-fb.types'
 
 export const RichPanelContextValues = createContext<IRichPanelContext | null>(
   null
@@ -20,29 +22,42 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [pageName, setPageName] = useState<string | null>(null)
 
+  const cookies = parseCookies()
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebase_auth, (authUser) => {
       if (authUser) {
         setUser(authUser)
       } else {
-        sessionStorage.removeItem('session')
-        window.location.href = '/login'
+        destroyCookie(null, 'session')
       }
     })
+
+    if (!cookies['session']) {
+      window.location.href = '/login'
+    }
+
     return () => unsubscribe()
-  }, [])
+  }, [cookies])
 
   useLayoutEffect(() => {
-    const token = localStorage.getItem(`facebook_page_data`)
+    const token = localStorage.getItem('facebook_page_data')
     if (token) {
       setConnected(true)
     }
   }, [])
 
+  const contextValues: IRichPanelContext = {
+    setConnected,
+    connected,
+    user,
+    setUser,
+    pageName,
+    setPageName,
+  }
+
   return (
-    <RichPanelContextValues.Provider
-      value={{ setConnected, connected, user, setUser, pageName, setPageName }}
-    >
+    <RichPanelContextValues.Provider value={contextValues}>
       {children}
     </RichPanelContextValues.Provider>
   )
