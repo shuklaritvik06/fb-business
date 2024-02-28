@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
+import { customInitApp } from '@/lib/firebase-admin'
+import { auth } from 'firebase-admin'
+
+customInitApp()
 
 export async function middleware(request: NextRequest) {
-  const base_url =
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000'
-      : 'https://richpanel-assignment-git-dev-shuklaritvik06.vercel.app/'
-
-  const apiUrl = new URL('/api/login', base_url)
-
   const session = request.cookies.get('session')?.value
 
   const excludedPaths = ['login', 'register']
@@ -21,13 +18,9 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const responseAPI = await fetch(apiUrl.href, {
-      headers: {
-        Cookie: `session=${session}`,
-      },
-    })
+    const decodedClaims = await auth().verifySessionCookie(session!, true)
 
-    if (responseAPI.status !== 200) {
+    if (!decodedClaims) {
       return NextResponse.redirect(new URL('/register', request.url))
     }
   } catch (error) {
