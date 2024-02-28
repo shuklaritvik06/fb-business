@@ -33,19 +33,21 @@ const RichPanelContext = ({ children }: { children: ReactNode }) => {
       }
     })
 
-    if (!cookies['session']) {
-      window.location.href = '/login'
-    }
-
     return () => unsubscribe()
-  }, [cookies])
+  }, [])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem('facebook_page_data')
     if (token) {
       setConnected(true)
     }
   }, [])
+
+  useEffect(() => {
+    if (!cookies['session'] && window.location.pathname !== '/login') {
+      window.location.href = '/login'
+    }
+  }, [cookies])
 
   const contextValues: IRichPanelContext = {
     setConnected,
