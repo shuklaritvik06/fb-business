@@ -28,18 +28,11 @@ export async function middleware(request: NextRequest) {
     if (responseAPI.status === 200) {
       return NextResponse.next()
     }
-
-    // if (
-    //   responseAPI.status !== 200 &&
-    //   !excludedPaths.some((path) => request.nextUrl.pathname.includes(path))
-    // ) {
-    //   return NextResponse.redirect(new URL('/register', request.url))
-    // }
   } catch (error) {
     console.error('Error fetching API:', error)
   }
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.png|connect).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.png).*)'],
 }
