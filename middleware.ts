@@ -25,6 +25,10 @@ export async function middleware(request: NextRequest) {
       },
     })
 
+    if (responseAPI.status === 200) {
+      return NextResponse.next()
+    }
+
     if (
       responseAPI.status !== 200 &&
       !excludedPaths.some((path) => request.nextUrl.pathname.includes(path))
