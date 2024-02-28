@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
       responseAPI.status !== 200 &&
       !excludedPaths.some((path) => request.nextUrl.pathname.includes(path))
     ) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      return NextResponse.redirect(new URL('/register', request.url))
     }
   } catch (error) {
     console.error('Error fetching API:', error)
